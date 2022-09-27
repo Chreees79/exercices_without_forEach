@@ -6218,6 +6218,7 @@ const usersFind = users.filter(u => u.revenue > 0);
 return "il y a " + ((usersFind.length *100)/users.length).toFixed(2) + " % d'utilisateurs ayant rapporté de l'argent";
 };
 console.log("il y a " + averageOfUser(users) + "% utilisateurs ayant rapporté de l'argent");
+
 // Parmi les utilisateurs ayant rapporté de l'argent, quel est le chiffre d'affaires moyen d'un utilisateur ?
 
 function averageForUser(users){
@@ -6248,85 +6249,62 @@ function usersRevenueFrench(users){
 let userPaidFrench = userFrench.filter(u => u.revenue > 0);
 return userPaidFrench.length
 };
-console.log("il y a " + usersRevenueFrench(users) + " utilisatuers payants en France.");
+console.log("il y a " + usersRevenueFrench(users) + " utilisateurs payants en France.");
 
 
 //Donne-moi le chiffre d'affaires réparti dans nos 4 pays les plus représentés (Allemagne, États-Unis, France, Grande-Bretagne) (chiffre d'affaires total, en France, aux États-Unis, etc.)
 
-// function revenueFourCountries(users) {
-
-
-
-
-
-const germanySumRevenue = users.filter(u => u.revenue > 0 && u.country == "Germany");
-const franceSumRevenue = users.filter(u => u.revenue > 0 && u.country == "France");
-const greatbritainSumRevenue = users.filter(u => u.revenue > 0 && u.country == "Great Britain");
-const statesSumRevenue = users.filter(u => u.revenue > 0 && u.country == "United States");
-let germanySum = 0;
-let franceSum = 0;
-let greatbritainSum = 0;
-let statesSum = 0;
-
-  germanySumRevenue.every(u=>
-    germanySum += u.revenue);
-    console.log("le chiffre d'affaire en Allemagne est de " + germanySum/100 + " €.")
-    franceSumRevenue.every(u=>
-    franceSum += u.revenue);
-    console.log("le chiffre d'affaire en France est de " + franceSum/100 + " €.")
-    greatbritainSumRevenue.every(u=>
-    greatbritainSum += u.revenue);
-    console.log("le chiffre d'affaire en Grande-Bretagne est de " + greatbritainSum/100 + " €.")
-    statesSumRevenue.every(u=>
-    statesSum += u.revenue);
-    console.log("le chiffre d'affaire aux Etats-Unis est de " + statesSum/100 + " €.");
-
+function fourCountries(arr){
+  return arr.reduce(function(acc, user){
+    if(!acc[user.country] && (ListCountries.includes(user.country))) {
+      acc[user.country] = (user.revenue/100);
+    }else if(acc[user.country]){
+      acc[user.country] += (user.revenue/100);
+    }
+    return acc;
+  }, {});
+}
+console.table(fourCountries(users));
 
 
 // Fais-moi la liste de tous les pays dans lesquels nous avons gagné de l'argent ?
-
-
 function listCountriesRevenue(users) {
-  const userRevenue = users.filter(u => u.revenue > 0);
-  return userRevenue.reduce((unique, item) => (unique.includes(item)? unique : [...unique, item]), [],);
+  const userRevenue = users.filter(u => u.revenue > 0).map(u => u.country);
+  return new Set(userRevenue);
 };
 console.log(listCountriesRevenue(users));
 
-
-
 // Quels sont nos 5 utilisateurs qui nous ont rapporté le plus d'argent ?
-
+function fiveUsers(users) {
 users.sort((a,b) => b.revenue - a.revenue);
-console.log(users.slice(0,5));
-
+return users.slice(0,5);
+};
+console.log(fiveUsers(users));
 
 
 // Gagnons-nous plus d'argent auprès des hommes ou des femmes ?
-
+function maleFemaleRevenue(users) {
   const manRevenue = users.filter(u => u.sex == "M");
   const femaleRevenue = users.filter(u => u.sex == "F")
-  let manSum = 0;
-  let femaleSum = 0;
-  manRevenue.forEach(u => {
-    manSum += u.revenue
-  });
-  femaleRevenue.forEach(u => {
-    femaleSum += u.revenue
-  });
-  manSum > femaleSum ? console.log("Nous gagnons plus d'argent auprès des hommes") : console.log("Nous gagnons plus d'argent auprès des femmes");
-
+  manRevenue.reduce((acc,user) => acc[user.sex] += user.sex);
+  femaleRevenue.reduce((acc,user) => acc[user.sex] += user.sex);
+  return manRevenue > femaleRevenue ? "Nous gagnons plus d'argent auprès des hommes" : "Nous gagnons plus d'argent auprès des femmes";
+};
+console.log(maleFemaleRevenue(users));
 
 
 // Sors-moi les utilisateurs ayant rapporté au moins 75€
-
-const userRevenue75 = users.filter(u => u.revenue >= 7500)
-console.log("Voici la liste des utilisateurs ayant rapporté au mons 75€");
-console.log( userRevenue75);
-
+function userRevenue75(users) {
+return users.filter(u => u.revenue >= 7500)
+};
+console.log(userRevenue75(users));
 
 
 // Parmi nos 100 premiers utilisateurs, quel est le pourcentage qui sont des clients payants ?
+function users100(users) {
 const newArr = users.sort((a,b) => a.id - b.id);
 const userFirst = newArr.slice(0, 100);
 const userFirstRevenue = userFirst.filter(u => u.revenue > 0)
-console.log(`il y a ${(userFirstRevenue.length * 100) / userFirst.length} % de clients payants dans les 100 premiers utilisateurs .`);
+return `il y a ${(userFirstRevenue.length * 100) / userFirst.length} % de clients payants dans les 100 premiers utilisateurs .`;
+};
+console.log(users100(users));
