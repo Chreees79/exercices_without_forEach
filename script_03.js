@@ -6254,9 +6254,10 @@ console.log("il y a " + usersRevenueFrench(users) + " utilisateurs payants en Fr
 
 //Donne-moi le chiffre d'affaires réparti dans nos 4 pays les plus représentés (Allemagne, États-Unis, France, Grande-Bretagne) (chiffre d'affaires total, en France, aux États-Unis, etc.)
 
+const ListCountries= ["Germany", "France", "Great Britain", "United States"];
 function fourCountries(arr){
   return arr.reduce(function(acc, user){
-    if(!acc[user.country] && (ListCountries.includes(user.country))) {
+    if(!acc[user.country] && ListCountries.includes(user.country)) {
       acc[user.country] = (user.revenue/100);
     }else if(acc[user.country]){
       acc[user.country] += (user.revenue/100);
